@@ -3,7 +3,7 @@
  const bd_users = require('./database/bd_users')
  const cors = require('cors')
  const bodyParser = require('body-parser')
-
+ const port = process.env.PORT ||3001;
 
  server.use(express.json())
  server.use(cors())
@@ -68,11 +68,11 @@
     })
     .then(()=>{
         console.log("Usuario cadastrado com sucesso")
-        res.status(201).json({message : "Usuario cadastrao com sucesso"})
+        // res.status(201).json({message : "Usuario cadastrao com sucesso"})
     })
     .catch(err =>{
         console.log(`Erro ao cadastrar usuario: ${err}`)
-        res.status(400).json({message : "Erro ao cadastrar usuario"})
+        // res.status(400).json({message : "Erro ao cadastrar usuario"})
     })
 
     
@@ -109,7 +109,7 @@
     
      try {
         
-        bd_users.findOne({where : {name : user.name}})
+        bd_users.findOne({where : {name : user.name, password : user.password}})
         .then(User =>{
             if(User)
             {
@@ -138,7 +138,7 @@
      res.send(jsonData)
  })
 
- const port = process.env.PORT ||3000;
+
 
  // Listen on `port` and 0.0.0.0
  server.listen(port, "0.0.0.0", function () {

@@ -3,37 +3,12 @@
  const bd_users = require('./database/bd_users')
  const cors = require('cors')
  const bodyParser = require('body-parser')
-//  const bcrypt = require('bcrypt')
+
 
  server.use(express.json())
  server.use(cors())
  server.use(bodyParser.urlencoded({extended:false}))
 
-//  async function cryptPassword(password){
-//      const saltRounds = 10
-//      const hash = bcrypt.hash(password, saltRounds)
-//      return hash
-//  }
-
-//  async function comparePassword(password, hashedPassword){
-//      try{
-//          const result = await bcrypt.compare(password, hashedPassword)
-
-//          if(result){
-//               console.log("Senhas coincidem")
-//              return 'true'
-            
-//          }else{
-//               console.log("Senhas nao coincidem")
-//              return 'false'
-            
-//          }
-
-//      }
-//      catch(err){
-//          console.log("Erro ao tentar comparar senhas " + err)
-//      }
-//  }
 
  server.get('/', (req,res)=>{
      res.send('Olá bem vindo ao servidor backend')
@@ -80,34 +55,25 @@
      console.log("Cadastrando usuarios")
      var password =  req.body.password
      res.status(201).json({message : "Ok"})
-    //  cryptPassword(password)
-    //  .then(hash =>{
-    //      password = hash
-    //      console.log(password)
-    //      const user = {
-    //          name : req.body.name,
-    //          password : password,
-    //          state : req.body.state
-    //      }
-    //      console.log(user)
-    //      bd_users.create({
-    //          name : user.name ,
-    //          password : user.password,
-    //          state: user.state
-    //      })
-    //      .then(()=>{
-    //          console.log("Usuario cadastrado com sucesso")
-    //          res.status(201).json({message : "Usuario cadastrao com sucesso"})
-    //      })
-    //      .catch(err =>{
-    //          console.log(`Erro ao cadastrar usuario: ${err}`)
-    //          res.status(400).json({message : "Erro ao cadastrar usuario"})
-    //      })
-    //  })
-    //  .catch(err =>{
-    //      console.log(`Err: ${err}`)
-    //      res.sendStatus(501)
-    //  })
+     const user = {
+        name : req.body.name,
+        password : password,
+        state : req.body.state
+    }
+
+    bd_users.create({
+        name : user.name ,
+        password : user.password,
+        state: user.state
+    })
+    .then(()=>{
+        console.log("Usuario cadastrado com sucesso")
+        res.status(201).json({message : "Usuario cadastrao com sucesso"})
+    })
+    .catch(err =>{
+        console.log(`Erro ao cadastrar usuario: ${err}`)
+        res.status(400).json({message : "Erro ao cadastrar usuario"})
+    })
 
     
  })
@@ -141,53 +107,25 @@
      var passWordHash
      console.log(user)
     
-    //  cryptPassword(user.password)
-    //  .then((passwordHash)=>{
-    //      passWordHash = passwordHash
-    //      try {
+     try {
         
-    //          bd_users.findOne({where : {name : user.name}})
-    //          .then(User =>{
-    //              if(User){
-    //                  console.log("Usuario encontrado, verificando credenciais...")
-    //                  console.log(User)
-    //                  comparePassword(user.password, User.password )
-    //                  .then(result =>{
-    //                      if(result === 'true'){
-    //                          console.log("Usuario logado com sucesso")
-                              
-    //                          res.send({ user : User.name, hasPermission : User.hasPermission, id : User.id})
-    //                      }else{
-    //                          console.log("Credenciais invalidas")
-    //                          res.sendStatus(400)
-    //                          res.send({message: "Senha ou Usuario  inválidos"})
-    //                      }
-    //                  })
-    //                  .catch(err =>{
-    //                      console.log("Erro ao verificar as credenciais")
-    //                  })
-                    
-                    
-    //                    res.status(200).send({ message: 'Login successful' , user: `${User.name}`})
-    //              }
-    //              else{
-    //                  console.log("Usuario nao encontrado")
-    //                  res.send({message: "Usuario não encontrado no banco de dados"})
-    //              }
-    //          })
-    //          .catch(err=>{
-    //              console.log(`Erro ao consultar banco de dados  ${err}`)
-    //          })
-    //      }
-    //      catch{
-    //          console.log("erro")
-    //      }
-
-    //  })
-    //  .catch(err=>{
-    //      console.log("Erro ao criptografar senha : "+err)
-    //  })
-
+        bd_users.findOne({where : {name : user.name}})
+        .then(User =>{
+            if(User)
+            {
+                console.log("usuario encontrado no banco de dados")
+                res.send({ user : User.name, hasPermission : User.hasPermission, id : User.id})
+            }else{
+                console.log("usuario nao encontrado no banco de dados")
+            }
+        })
+        .catch(err=>{
+            console.log(`Erro ao consultar banco de dados  ${err}`)
+        })
+    }
+    catch{
+        console.log("erro")
+    }
 
 
     

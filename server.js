@@ -103,8 +103,6 @@
          password : req.body.password
      }
 
-     var hasPermission = false
-     var passWordHash
      console.log(user)
     
      try {
@@ -117,6 +115,7 @@
                 res.send({ user : User.name, hasPermission : User.hasPermission, id : User.id})
             }else{
                 console.log("usuario nao encontrado no banco de dados")
+                res.send({message: "Usuario nao encontrado no banco de dados"})
             }
         })
         .catch(err=>{

@@ -9,7 +9,8 @@ const bd_users = database.define('users', {
     },
 
     name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+  
     },
 
     password: {

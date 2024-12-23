@@ -1,0 +1,69 @@
+[
+    {
+        "name" : "root",
+        "password" : "000000000000",
+        "state" : "",
+        "hasPermission" : true
+    },
+    {
+      "name": "Joao Silva",
+      "password": "abc123",
+      "state": "São Paulo",
+      "hasPermission": false
+    },
+    {
+      "name": "Maria Oliveira",
+      "password": "def456",
+      "state": "Rio de Janeiro",
+      "hasPermission": false
+    },
+    {
+      "name": "Carlos Souza",
+      "password": "ghi789",
+      "state": "Minas Gerais",
+      "hasPermission": false
+    },
+    {
+      "name": "Ana Pereira",
+      "password": "jkl012",
+      "state": "Bahia",
+      "hasPermission": false
+    },
+    {
+      "name": "Felipe Costa",
+      "password": "mno345",
+      "state": "Ceará",
+      "hasPermission": false
+    },
+    {
+      "name": "Julia Santos",
+      "password": "pqr678",
+      "state": "Pernambuco",
+      "hasPermission": false
+    },
+    {
+      "name": "Rafael Lima",
+      "password": "stu901",
+      "state": "Paraná",
+      "hasPermission": false
+    },
+    {
+      "name": "Larissa Rocha",
+      "password": "vwx234",
+      "state": "Rio Grande do Sul",
+      "hasPermission": false
+    },
+    {
+      "name": "Eduardo Almeida",
+      "password": "yz0123",
+      "state": "Santa Catarina",
+      "hasPermission": false
+    },
+    {
+      "name": "Fernanda Martins",
+      "password": "abc456",
+      "state": "Espírito Santo",
+      "hasPermission": false
+    }
+  ]
+  

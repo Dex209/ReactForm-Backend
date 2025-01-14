@@ -1,20 +1,22 @@
 {
-  "name": "backend",
+  "name": "backend-npr",
   "version": "1.0.0",
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "author": "",
+  "author": "LacamJC",
   "license": "ISC",
+  "description": "",
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "axios": "^1.7.9",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "express": "^4.21.2",
-    "mysql2": "^3.11.5",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.12.0",
+    "path": "^0.12.7",
     "sequelize": "^6.37.5"
   }
 }

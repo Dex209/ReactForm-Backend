@@ -1,0 +1,45 @@
+
+const Sequelize = require('sequelize')
+const database = require('../connection')
+
+const bd_usuarios = database.define('bd_usuarios', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+
+    nome: {
+        type: Sequelize.STRING, 
+
+    } 
+    ,
+
+    email: {
+        type: Sequelize.STRING,
+        unique : true
+    },
+
+    telefone: {
+        type: Sequelize.STRING
+    },
+
+    senha: {
+        type: Sequelize.STRING
+    }
+
+    // foto: {
+    //     type: Sequelize.STRING
+    // },
+
+    // adm: {
+    //     type: Sequelize.STRING
+    // }
+
+})
+
+//  bd_usuarios.sync({force:true})
+
+
+ 
+module.exports = bd_usuarios

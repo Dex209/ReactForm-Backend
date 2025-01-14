@@ -1,15 +1,9 @@
 const Sequelize = require('sequelize')
 
-// const sequelize = new Sequelize('reactform', 'root', '', {
-//     dialect: "mysql",
-//     host: "localhost",
-//     port: 3306
-// })
-
-const sequelize = new Sequelize('railway', 'root', 'WWXBnTcKhYnJbAhQvlXKjwSjWUbAvExC', {
-    dialect: "mysql",
-    host: "autorack.proxy.rlwy.net",
-    port: 57460
+const sequelize = new Sequelize('u342643381_database', 'u342643381_root', 'OKn2089x', {
+    dialect : 'mysql', 
+    host: 'srv1782.hstgr.io',
+    port: 3306
 })
 
 module.exports = sequelize

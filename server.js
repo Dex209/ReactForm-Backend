@@ -1,225 +1,240 @@
- const express= require('express')
- const server = express()
- const bd_users = require('./database/bd_users')
- const cors = require('cors')
- const bodyParser = require('body-parser')
- const dataUsers = require('./database/Data.json')
- const port = process.env.PORT ||3001;
+const express = require('express')
+const server = express()
+const port = process.env.PORT || 3001
 
- server.use(express.json())
- server.use(cors())
- server.use(bodyParser.urlencoded({extended:false}))
+const DefaultData = require('./database/Data.json')
+
+const axios = require('axios')
+const cors = require('cors')
+const bodyParser = require('body-parser')
+
+const path = require('path')
+const multer = require('multer')
+const upload = multer({dest: path.join(__dirname, 'public/uploads')})
+server.use(upload.single('foto'))
+
+const bd_pontos = require('./database/models/bd_pontos.js')
+const bd_usuarios = require('./database/models/bd_usuarios.js')
 
 
- async function setDatabase(){
+server.use(express.json())
+server.use(cors())
+server.use(bodyParser.urlencoded({extended:false}))
+
+async function setDatabase(){
     try{
-        await bd_users.bulkCreate(dataUsers)
-        console.log("USUARIOS CRIADOS COM SUCES")
+        await bd_pontos.bulkCreate(DefaultData)
+        console.log("DEFAULT DATA SUCCESS")
+    }
+    catch(err)
+    {
+        console.log("ERRO TO DEFAULT DATA: "+ err)
+    }
+}
+
+server.get('/', (req,res)=>{
+    res.send('olá')
+})
+
+server.post("/cadastrarPonto",upload.single('foto'), async(req,res)=>{
+    console.log("CADASTRANDO PONTO")
+    const ponto = {
+        email: req.body.email,
+        instituicao : req.body.instituicao,
+        cep : req.body.cep,
+        email : req.body.email,
+        cidade : req.body.cidade,
+        bairro : req.body.bairro,
+        // foto : req.file,
+        rua : req.body.rua,
+        tipo: req.body.tipo
+    }
+
+    try{
+            bd_pontos.create({
+                email_usuario:ponto.email,
+                instituicao: ponto.instituicao,
+                cep: ponto.cep,
+                cidade: ponto.cidade,
+                bairro: ponto.bairro,
+                rua: ponto.rua, 
+                tipo: ponto.tipo
+            })
+            .then(()=>{
+                console.log("Novo ponto criado")
+                res.status(201).send({message:"Ponto criado com sucesso"})
+            })  
+            .catch(err=>{
+                console.log("Erro ao cadastra novo ponto: "+err)
+                res.send({message:"Erro ao criar ponto"})
+            })
     }catch(err){
-        console.log("Erro ao inserir dados existentes no banco de dados: " +err)
+        console.log(`Erro ao criar novo ponto: ${err}`)
     }
- }
+    
 
 
- server.get('/', (req,res)=>{
-     res.send('Olá bem vindo ao servidor backend')
+    console.log(ponto)
+})
 
- })
-
- server.get('/getUsers', async (req,res)=>{
-     bd_users.findAll({})
-     .then(user =>{
-         console.log("Usuarios encontrados")
-         console.log(user)
-
-         const jsonData = user.map(user => user.get({plain:true}));
-         console.log(JSON.stringify(jsonData, null, 2));
-         res.send(jsonData);
-     })
-     .catch(err =>{
-         console.log("Erro ao procurar usuarios")
-         console.log(err)
-     })
- })
-
- server.get('/getUser/:id', async (req,res) =>{
-     console.log("buscando usuario unico")
-     const id = req.params.id 
-     console.log(`Id do usuario: ${id}`)
-
-     bd_users.findOne({where : {id : id}})
-     .then(user => {
-         if(user){
-             console.log("Usuario encontrado")
-             const jsonData = JSON.stringify(user, null, 2)
-             console.log(jsonData)
-             res.send((jsonData))
-         }else{
-             console.log("Usuario nao encontrado")
-         }
-     })
-     .catch(err =>{
-         console.log("Erro ao acessar banco de dados" + err)
-     })
- })
-
- server.post('/cadUsers', async(req,res)=>{
-     console.log("Cadastrando usuarios")
-     var password =  req.body.password
-    //  res.status(201).json({message : "Ok"})
-     const user = {
-        name : req.body.name,
-        password : password,
-        state : req.body.state
+server.post('/cadUser', async (req, res) => {
+    console.log("Cadastrando usuário");
+    const user = {
+        nome : req.body.nome,
+        email : req.body.email,
+        telefone : req.body.telefone,
+        senha : req.body.senha
     }
 
+    await bd_usuarios.findOne({where : {email : user.email}})
+    .then((usuario)=>{
+        if(usuario){
+            console.log("EMAIL JA EXISTE")
+            res.status(200).send({message:"Email já cadastrado"})
+        }else{
+            try{
+                 bd_usuarios.create({
+                    nome: user.nome,
+                    email: user.email,
+                    telefone: user.telefone,
+                    senha: user.senha,
+                 // foto: foto
+                })
+                .then(()=>{
+                    console.log("USUARIO CADASTRADO COM SUCESSO")
+                    res.status(201).send({message:'Usuario cadastrado com sucesso'})
+                })
+                .catch(err=>{
+                    console.log("Erro ao cadastrar usuario: "+err)
+                    res.status(401).send({message:'erro ao cadastrar usuario'})
+                })
+            }
+            catch(erro)
+            {
+                console.log("Erro ao acessar banco de dados")
+            }
+        }
+    })
+
+    
+  })
+
+
+  server.post('/verifyUser/',async (req,res)=>{
+    console.log("Verificando usuario")
+    const user = {
+        email : req.body.email,
+        senha : req.body.senha
+    }
+
+    await bd_usuarios.findOne({where : {email : user.email, senha : user.senha}})
+    .then(usuario=>{
+        if(usuario)
+        {
+            console.log("### Usuario encontrado")
+
+            const jsonData = JSON.stringify(usuario,null,2)
+
+            res.send({message:"Usuario encontrado", data : jsonData})
+
+        }else{
+
+            console.log("### Usuario nao encontrado no banco dedados")
+            res.send({message:"Usuario nao encontrado"})
+        }
+    })
+    .catch(err=>{
+        console.log("Erro ao realizar busca: "+err)
+    })
+
+
+  })
+
+
+server.get('/pontos', async (req,res)=>{
+    console.log("PEGANDO TODOS OS PONTOS CADASTRADOS")
+    try{
+        await bd_pontos.findAll({
+        attributes: ['id', 'instituicao', 'cep', 'tipo']
+        })
+        .then((pontos)=>{
+            console.log(pontos)
+
+            res.send(JSON.stringify(pontos,null,2))
+        })
+        .catch(err=>{
+            console.log("Erro ao realizar busca:" + err)
+            res.send(401)
+        })
+    }catch(err)
+    {
+        console.log(err)
+        res.send(401)
+    }
+})
+
+server.get('/ping', (req,res)=>{
+    res.sendStatus(200)
+})
+
+server.put('/updateProfile', async(req,res)=>{
+    
+    const userData = {
+        nome : req.body.nome,
+        currentEmail : req.body.currentEmail,
+        email : req.body.email,
+        senha : req.body.senha,
+        telefone : req.body.telefone
+    }
 
     try{
-        bd_users.findOne({where : {name : user.name}})
-        .then(User=>{
-            if(User){
-                console.log("NOME DE USUARIO JA CADASTRADO")
-                res.status(403).send({message : "Já existe um usuario com este nome", error : 'true'})
-            }else{
-                console.log("NOME DISPONIVEL")
-
-                try{
-                    bd_users.create({
-                        name : user.name ,
-                        password : user.password,
-                        state: user.state
-                    })
-                    .then(()=>{
-                        console.log("Usuario cadastrado com sucesso")
-                        res.status(201).json({message : "Usuario cadastrao com sucesso", error: 'false'})
-                    })
-                    .catch(err =>{
-                        console.log(`Erro ao cadastrar usuario: ${err}`)
-                        res.status(403).json({message : "Erro ao cadastrar usuario", error : 'true'})
-                    })
-                }catch(err){
-                    console.log("Erro ao cadastrar usuario : " +err)
-                }
+        await bd_usuarios.update({
+            nome : userData.nome,
+            email : userData.email,
+            senha : userData.senha,
+            telefone: userData.telefone
+        },{
+            where : {
+                email : userData.currentEmail
             }
         })
-    }catch(err){
-        console.log("Erro ao realizar busca: " + err)
-    }
+        .then(async (response)=>{
+            if(response){
+                console.log("Dados alterados com successo")
 
+                await bd_usuarios.findOne({where : {email : userData.email}})
+                .then(usuario=>{
+                    if(usuario)
+                    {
+                        console.log("USUARIO ACHADO")
+                        const jsonData = JSON.stringify(usuario,null,2)
 
- })
-
- server.delete("/deleteUser/:id", async(req,res)=>{
-     console.log("Deletando usuario")
-     let id = req.params.id
-     console.log(`Usuario com id: ${id}`)
-
-
-     bd_users.destroy({
-         where: {id : id},
-         limit: 1
-     })
-     .then(()=>{
-         console.log("Usuario deletado")
-         res.send({message: "Usuario deletado", delete : true})
-     })
-     .catch(err =>{
-         console.log(`Erro ao deletar usuario: ${err}`)
-     })
- })
-
- server.post('/verifyUser', async(req,res)=>{
-     console.log("Verificando usuario")
-     const user = {
-         name : req.body.name,
-         password : req.body.password
-     }
-
-    //  console.log(user)
-    
-     try {
-        
-        bd_users.findOne({where : {name : user.name, password : user.password}})
-        .then(User =>{
-            if(User)
-            {
-                console.log("usuario encontrado no banco de dados")
-                res.send({ user : User.name, hasPermission : User.hasPermission, id : User.id})
+                        res.send({message:"Usuario encontrado", data : jsonData})
+                    }
+                    else{
+                        console.log("USUARIO NAO ENCONTRADO")
+                    }
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
             }else{
-                console.log("usuario nao encontrado no banco de dados")
-                res.send({message: "Usuario nao encontrado no banco de dados"})
+                console.log("Erro ao alterar dados")
+                res.send({message: "Erro ao alterar dados"})
             }
         })
         .catch(err=>{
-            console.log(`Erro ao consultar banco de dados  ${err}`)
-            res.send({message: "sem comunicação com banco de dados", status : false})
+            console.log(err)
         })
+    }catch(err)
+    {
+        console.log(`ERRO TO UPDATE: ${err}`)
     }
-    catch{
-        console.log("erro")
-    }
-
 
     
- })
+})
 
-
- server.get('/ping', (req,res)=>{
-    //  console.log("Servidor pingado")
-     const jsonData = {status : true}
-     res.send(jsonData)
- })
-
- server.put('/atualizarDados/:id', async (req,res)=>{
-    let id = req.params.id
-    const newData = {
-        name : req.body.name,
-        password : req.body.password, // pq esta duplicando o campo de passsword? ??????? caga caga
-        state : req.body.state
-    }
-
-    console.log("Atualizando dados do id " +id)
-    console.log(JSON.stringify(newData, null, 2))
-
-    try{
-        bd_users.findOne({where : {id : id}})
-        .then((user)=>{
-            if(user){
-                console.log("usuario encontrado")
-                
-                
-                bd_users.update(
-                    {
-                        name : newData.name,
-                        password: newData.password,
-                        state : newData.state
-                    },
-                    {where : {id : id}}
-                )
-                
-
-
-                console.log("Dados atualizados com sucesso")
-                res.send({message:"Dados atualizados com sucesso", id : user.id})
-            }else{
-                console.log("Usuario nao encontrado")
-            }
-        })
-        .catch((err)=>{
-            console.log("Erro ao fazer busca no banco de dados: "+err)
-        })
-    }catch(err){
-        console.log("Erro ao fazer atualização de dados")
-    }   
-
-    
-
- })
-
-
-
- // Listen on `port` and 0.0.0.0
- server.listen(port, "0.0.0.0",  ()=> {
-   console.log(`SERVER OPEN ON PORT ${port}`)
-   setTimeout(()=>{setDatabase()},5000)
- });
+server.listen(port, (req,res)=>{
+    console.log(`Server listening on port: ${port}`)
+    // setTimeout(()=>setDatabase(),2000)
+})

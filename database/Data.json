@@ -1,69 +1,48 @@
 [
     {
-        "name" : "root",
-        "password" : "000000000000",
-        "state" : "",
-        "hasPermission" : true
+        "email_usuario" : "root@gmail.com",
+        "instituicao" : "Recicla Barueri",
+        "cep" : "06440-010",
+        "cidade" : "Barueri",
+        "bairro" : "Jardim Iracema",
+        "rua" : "Av. Iracema",
+        "tipo" : ["Eletrônico"]
     },
     {
-      "name": "Joao Silva",
-      "password": "abc123",
-      "state": "São Paulo",
-      "hasPermission": false
+        "email_usuario" : "root@gmail.com",
+        "instituicao" : "SAMVIT",
+        "cep" : "06408-030",
+        "cidade" : "Barueri",
+        "bairro" : "Vila Morellato",
+        "rua" : "Avenida Etiópia",
+        "tipo" : ["Eletrônico"]
     },
     {
-      "name": "Maria Oliveira",
-      "password": "def456",
-      "state": "Rio de Janeiro",
-      "hasPermission": false
+        "email_usuario" : "root@gmail.com",
+        "instituicao" : "RECICLA TOTAL ",
+        "cep" : "06440-200",
+        "cidade" : "Barueri",
+        "bairro" : "Jardim Iracema/Aldeia",
+        "rua" : "Rua Engenheiro Cezar Polillo",
+        "tipo" : ["Eletrônico"]
     },
     {
-      "name": "Carlos Souza",
-      "password": "ghi789",
-      "state": "Minas Gerais",
-      "hasPermission": false
+        "email_usuario" : "root@gmail.com",
+        "instituicao" : "Novo Horizonte Ambiental",
+        "cep" : "06404-301",
+        "cidade" : "Barueri",
+        "bairro" : "Bethaville I",
+        "rua" : "Rua Caldas Novas",
+        "tipo" : ["Orgânico"]
     },
     {
-      "name": "Ana Pereira",
-      "password": "jkl012",
-      "state": "Bahia",
-      "hasPermission": false
-    },
-    {
-      "name": "Felipe Costa",
-      "password": "mno345",
-      "state": "Ceará",
-      "hasPermission": false
-    },
-    {
-      "name": "Julia Santos",
-      "password": "pqr678",
-      "state": "Pernambuco",
-      "hasPermission": false
-    },
-    {
-      "name": "Rafael Lima",
-      "password": "stu901",
-      "state": "Paraná",
-      "hasPermission": false
-    },
-    {
-      "name": "Larissa Rocha",
-      "password": "vwx234",
-      "state": "Rio Grande do Sul",
-      "hasPermission": false
-    },
-    {
-      "name": "Eduardo Almeida",
-      "password": "yz0123",
-      "state": "Santa Catarina",
-      "hasPermission": false
-    },
-    {
-      "name": "Fernanda Martins",
-      "password": "abc456",
-      "state": "Espírito Santo",
-      "hasPermission": false
+        "email_usuario" : "root@gmail.com",
+        "instituicao" : "Veolia",
+        "cep" : "06408-040",
+        "cidade" : "Barueri",
+        "bairro" : "Vila Morellato",
+        "rua" : "Rua Macatuba",
+        "tipo" : ["Orgânico"]
     }
-  ]
-  
+
+]
